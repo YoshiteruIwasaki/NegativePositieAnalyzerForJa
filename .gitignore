@@ -20,3 +20,9 @@ test-result
 server.pid
 *.iml
 *.eml
+
+### OSX ###
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
