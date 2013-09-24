@@ -53,23 +53,30 @@ public class TweetService {
 	 * @param node
 	 * @return
 	 */
-	public static Tweet saveTweetByStatus(Status status, String keyword, Category category) {
-		Tweet tweet = new Tweet();
-		tweet.searchWord = keyword;
-		tweet.tweeterId = status.getId();
-		tweet.createdAt = status.getCreatedAt();
-		tweet.source = status.getSource();
-		tweet.text = status.getText();
-		tweet.tweeterUserId = status.getUser().getId();
-		tweet.tweeterUsetName = status.getUser().getName();
-		tweet.tweeterUserScreenName = status.getUser().getScreenName();
-		tweet.tweeterUserUrl = status.getUser().getURL();
-		tweet.tweeterUserImageUrl = status.getUser().getProfileImageURLHttps();
-		tweet.point = 0D;
-		tweet.rawPoint = 0D;
-		tweet.categoryId = category.categoryId;
-		tweet.save();
-		return tweet;
+	public static Tweet saveTweetByStatus(Status status, String keyword,
+			Category category) {
+		try {
+			Tweet tweet = new Tweet();
+			tweet.searchWord = keyword;
+			tweet.tweeterId = status.getId();
+			tweet.createdAt = status.getCreatedAt();
+			tweet.source = status.getSource();
+			tweet.text = status.getText();
+			tweet.tweeterUserId = status.getUser().getId();
+			tweet.tweeterUsetName = status.getUser().getName();
+			tweet.tweeterUserScreenName = status.getUser().getScreenName();
+			tweet.tweeterUserUrl = status.getUser().getURL();
+			tweet.tweeterUserImageUrl = status.getUser()
+					.getProfileImageURLHttps();
+			tweet.point = 0D;
+			tweet.rawPoint = 0D;
+			tweet.categoryId = category.categoryId;
+			tweet.save();
+			return tweet;
+		} catch (Exception e) {
+			Logger.error("[TweetService]", e);
+		}
+		return null;
 	}
 
 	public static Tweet updateItemTweet(Tweet tweet, Item item,
