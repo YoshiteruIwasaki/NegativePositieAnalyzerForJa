@@ -47,7 +47,6 @@ public class TwitterUtils {
 			query.setLang("ja");
 			query.setCount(ApplicationConfigUtils.TWEET_SEARCH_MAX_COUNT);
 			QueryResult result;
-			Logger.error(query.getQuery());
 			result = twitter.search(query);
 
 			for (Status status : result.getTweets()) {
