@@ -37,7 +37,7 @@ public class Global extends GlobalSettings {
 		// 5分ごとにTwitter検索
 		Akka.system()
 				.scheduler()
-				.schedule(Duration.create(0, TimeUnit.SECONDS),
+				.schedule(Duration.create(1, TimeUnit.SECONDS),
 						Duration.create(300, TimeUnit.SECONDS), getAnalyze,
 						Akka.system().dispatcher());
 
