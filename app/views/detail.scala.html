@@ -1,4 +1,4 @@
-@(message: String, bean: beans.ItemBean, tweetList: List[beans.TweetBean])
+@(message: String, bean: beans.ItemBean, tweetList: List[beans.TweetBean], currentPage: Integer, pageCount: Integer)
 
 @main(message) {
 <h1>@Html({bean.getItem.title})</h1>
@@ -33,11 +33,28 @@
         chart.draw(data, options);
       }
     </script>
+    <div style="text-align:center"><span class="label label-default">@{currentPage}/@{pageCount}</span></div>
+<ul class="pager">
 
+		@if(currentPage == 1) {
+			<li class="previous disabled"><span>&laquo; Previous</span></li>
+		} else {
+			<li class="previous"><a href="@routes.ItemDetail.index(bean.getItem.categoryId, bean.getItem.itemId, currentPage - 1)">&laquo; Previous</a></li>
+		}
+
+		@if(currentPage == (pageCount-1)) {
+			<li class="next disabled"><span>&raquo; Next</span></li>
+		} else {
+			<li class="next"><a href="@routes.ItemDetail.index(bean.getItem.categoryId, bean.getItem.itemId, currentPage + 1)">&raquo; Next</a></li>
+		}
+
+    </ul>
+
+
+	    <div class="row" id="itemDetail">
 	@if(tweetList != null && tweetList.size() > 0){
 	    @for(tweet <- tweetList){
-	    <div class="row">
-	    <div class="col-md-4"><h2>
+	    <div class="pull-left item" style="width:550px;">
 	    @if(tweet.getTweet().point > 0L) {
 	    <span class="label label-primary">ポジティブ</span>
 } else{
@@ -47,14 +64,26 @@
 	    <span class="label label-warning">ニュートラル</span>
 	    }
 	    }
-	    </h2>
-	   </div>
-	     <div class="col-md-8">
-	    <blockquote class="twitter-tweet" lang="ja"><p>@{tweet.getTweet().text}</p>&mdash; @{tweet.getTweet().tweeterUsetName} (@@@{tweet.getTweet().tweeterUserScreenName})
+	    <blockquote class="twitter-tweet" lang="ja" width="550"><p>@{tweet.getTweet().text}</p>&mdash; @{tweet.getTweet().tweeterUsetName} (@@@{tweet.getTweet().tweeterUserScreenName})
 	    <a href="@{tweet.getUrl}" data-datetime="@{tweet.getDatetime}">@{tweet.getTweet().createdAt}</a></blockquote>
-	    </div>
 	    </div>
 	    }
 	}
+	    </div>
+	<ul class="pager">
+
+		@if(currentPage == 1) {
+			<li class="previous disabled"><span>&laquo; Previous</span></li>
+		} else {
+			<li class="previous"><a href="@routes.ItemDetail.index(bean.getItem.categoryId, bean.getItem.itemId, currentPage - 1)">&laquo; Previous</a></li>
+		}
+
+		@if(currentPage == (pageCount-1)) {
+			<li class="next disabled"><span>&raquo; Next</span></li>
+		} else {
+			<li class="next"><a href="@routes.ItemDetail.index(bean.getItem.categoryId, bean.getItem.itemId, currentPage + 1)">&raquo; Next</a></li>
+		}
+
+    </ul>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 }

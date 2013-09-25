@@ -2,6 +2,9 @@ package services;
 
 import java.util.List;
 
+import com.avaje.ebean.Page;
+import com.avaje.ebean.PagingList;
+
 import models.Category;
 import models.Item;
 import models.Tweet;
@@ -9,6 +12,7 @@ import play.Logger;
 import play.db.ebean.Model.Finder;
 import rikyu.model.Sentence;
 import twitter4j.Status;
+import utils.ApplicationConfigUtils;
 
 public class TweetService {
 
@@ -128,6 +132,37 @@ public class TweetService {
 	 */
 	public static List<Tweet> getTweetByItem(Item item) {
 		return find.where().eq("itemId", item.itemId).findList();
+	}
+
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static PagingList<Tweet> getTweetResultPagingList(Item item) {
+		return find.where().eq("itemId", item.itemId).orderBy().desc("createdAt")
+				.findPagingList(ApplicationConfigUtils.MAX_PER_PAGE);
+	}
+
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static List<Tweet> getTweetResultList(Item item, Integer page) {
+		PagingList<Tweet> pagingList = getTweetResultPagingList(item);
+		Page<Tweet> currentPage = pagingList.getPage(page - 1);
+		return currentPage.getList();
+	}
+
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static Integer getTweetResultCount(Item item, Integer page) {
+		PagingList<Tweet> pagingList = getTweetResultPagingList(item);
+		return pagingList.getTotalPageCount();
 	}
 
 }
