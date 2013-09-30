@@ -1,9 +1,9 @@
 package services;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.avaje.ebean.Page;
-import com.avaje.ebean.PagingList;
 
 import models.Category;
 import models.Item;
@@ -13,6 +13,14 @@ import play.db.ebean.Model.Finder;
 import rikyu.model.Sentence;
 import twitter4j.Status;
 import utils.ApplicationConfigUtils;
+import beans.DateItemBean;
+import beans.TweetBean;
+
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Page;
+import com.avaje.ebean.PagingList;
+import com.avaje.ebean.SqlRow;
+import components.ISO8601DateFormat;
 
 public class TweetService {
 
@@ -130,6 +138,15 @@ public class TweetService {
 	 * @param item
 	 * @return
 	 */
+	public static int getCountByItem(Item item) {
+		return find.where().eq("itemId", item.itemId).findRowCount();
+	}
+
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
 	public static List<Tweet> getTweetByItem(Item item) {
 		return find.where().eq("itemId", item.itemId).findList();
 	}
@@ -139,8 +156,9 @@ public class TweetService {
 	 * @param item
 	 * @return
 	 */
-	public static PagingList<Tweet> getTweetResultPagingList(Item item) {
-		return find.where().eq("itemId", item.itemId).orderBy().desc("createdAt")
+	public static PagingList<Tweet> getTweetCriteria(Item item) {
+		return find.where().eq("itemId", item.itemId).orderBy()
+				.desc("createdAt")
 				.findPagingList(ApplicationConfigUtils.MAX_PER_PAGE);
 	}
 
@@ -150,7 +168,7 @@ public class TweetService {
 	 * @return
 	 */
 	public static List<Tweet> getTweetResultList(Item item, Integer page) {
-		PagingList<Tweet> pagingList = getTweetResultPagingList(item);
+		PagingList<Tweet> pagingList = getTweetCriteria(item);
 		Page<Tweet> currentPage = pagingList.getPage(page - 1);
 		return currentPage.getList();
 	}
@@ -161,8 +179,40 @@ public class TweetService {
 	 * @return
 	 */
 	public static Integer getTweetResultCount(Item item, Integer page) {
-		PagingList<Tweet> pagingList = getTweetResultPagingList(item);
+		PagingList<Tweet> pagingList = getTweetCriteria(item);
 		return pagingList.getTotalPageCount();
+	}
+
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static List<DateItemBean> getTweetResultListGroupByDate(Item item) {
+
+		String sql = " SELECT created_at,"
+				+ " COUNT( CASE WHEN POINT = 0 THEN 1 ELSE NULL END ) AS neutral,"
+				+ " COUNT( CASE WHEN POINT > 0 THEN 1 ELSE NULL END ) AS positive,"
+				+ " COUNT( CASE WHEN POINT < 0 THEN 1 ELSE NULL END ) AS negative"
+				+ " FROM tweet" + " WHERE item_id = :item_id"
+				+ " GROUP BY DATE_FORMAT( created_at,  '%Y%m%d' )"
+				+ " ORDER BY created_at ASC";
+
+		List<SqlRow> sqlRows = Ebean.createSqlQuery(sql)
+				.setParameter("item_id", item.itemId).findList();
+
+		List<DateItemBean> results = new ArrayList<DateItemBean>();
+		for (SqlRow row : sqlRows) {
+			Date date = row.getDate("created_at");
+			Integer countNeutral = row.getInteger("neutral");
+			Integer countPositive = row.getInteger("positive");
+			Integer countNegative = row.getInteger("negative");
+			DateItemBean bean = DateItemBeanService.setDateItemBean(item,
+					countNeutral, countNegative, countPositive, date);
+			results.add(bean);
+		}
+		return results;
+
 	}
 
 }

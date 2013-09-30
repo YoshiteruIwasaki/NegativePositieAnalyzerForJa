@@ -12,6 +12,7 @@ import services.ItemService;
 import services.TweetBeanService;
 import services.TweetService;
 import views.html.detail;
+import beans.DateItemBean;
 import beans.ItemBean;
 import beans.TweetBean;
 
@@ -27,10 +28,11 @@ public class ItemDetail extends Controller {
 				TweetBean tweetBean = TweetBeanService
 						.setTweetBean(item, tweet);
 				arrayList.add(tweetBean);
-
 			}
 			int count = TweetService.getTweetResultCount(item, page);
-			return ok(detail.render(item.title, bean, arrayList, page, count));
+			int countByItem = TweetService.getCountByItem(item);
+			List<DateItemBean> dateList = TweetService.getTweetResultListGroupByDate(item);
+			return ok(detail.render(item.title, bean, arrayList, page, count, countByItem, dateList));
 		}
 
 		return notFound();

@@ -22,6 +22,7 @@ public class ItemBeanService {
 		bean.setRanking(ranking);
 		return bean;
 	}
+
 	public static ItemBean setItemBean(Item item, Long categoryId) {
 		int countNeutral = TweetService.countNeutralTweetByItem(item);
 		int countNegative = TweetService.countNegativeTweetByItem(item);

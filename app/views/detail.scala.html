@@ -1,4 +1,4 @@
-@(message: String, bean: beans.ItemBean, tweetList: List[beans.TweetBean], currentPage: Integer, pageCount: Integer)
+@(message: String, bean: beans.ItemBean, tweetList: List[beans.TweetBean], currentPage: Integer, pageCount: Integer, countByItem: Integer, dateList: List[beans.DateItemBean])
 
 @main(message) {
 <h1>@Html({bean.getItem.title})</h1>
@@ -33,7 +33,27 @@
         chart.draw(data, options);
       }
     </script>
-    <div style="text-align:center"><span class="label label-default">@{currentPage}/@{pageCount}</span></div>
+	    <div class="row"><div id="daily_chart_div@{bean.getItem.itemId}"></div></div>
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Date', 'ポジティブ', 'ネガティブ', 'ニュートラル'],
+	    @for(item <- dateList){
+          ['@{item.getDate}',  @{item.getCountPositive},       @{item.getCountNegative}, @{item.getCountNeutral}],
+          }
+        ]);
+
+        var options = {
+          title: '時系列'
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('daily_chart_div@{bean.getItem.itemId}'));
+        chart.draw(data, options);
+      }
+    </script>
+    <div style="text-align:center;margin-top:20px;">@{currentPage}/@{pageCount}ページ [@{countByItem}件]</div>
 <ul class="pager">
 
 		@if(currentPage == 1) {
