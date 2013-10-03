@@ -1,5 +1,8 @@
 package beans;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import models.Item;
 
 public class ItemBean {
@@ -13,6 +16,8 @@ public class ItemBean {
 	private int totalCount;
 
 	private int ranking;
+
+	private Date latestTweetDate;
 
 	private Item item;
 
@@ -62,6 +67,20 @@ public class ItemBean {
 
 	public void setRanking(int ranking) {
 		this.ranking = ranking;
+	}
+
+	public Date getLatestTweetDate() {
+		return latestTweetDate;
+	}
+
+	public String getLatestTweetDateString() {
+		SimpleDateFormat sdf1 = new SimpleDateFormat(
+				"yyyy'年'MM'月'dd'日' HH:mm:ss");
+		return sdf1.format(latestTweetDate);
+	}
+
+	public void setLatestTweetDate(Date latestTweetDate) {
+		this.latestTweetDate = latestTweetDate;
 	}
 
 }

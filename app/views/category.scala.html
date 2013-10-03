@@ -6,7 +6,8 @@
 	    @for(bean <- beanList){
 	    <div class="row">
 	    <div class="col-md-1">@if(bean.getRanking > 0) {@{bean.getRanking}位}</div>
-  <div class="col-md-4"><div id="chart_div@{bean.getItem.itemId}"></div></div>
+  <div class="col-md-4"><div id="chart_div@{bean.getItem.itemId}"></div>
+  <p>総数：@{bean.getTotalCount} 最新ツイート日時：@if(bean.getLatestTweetDate != null) {@{bean.getLatestTweetDateString}}</p></div>
   <div class="col-md-7">
   <h1>@Html({bean.getItem.title})</h1>
   <p>@Html({bean.getItem.description})</p>

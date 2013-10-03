@@ -138,8 +138,46 @@ public class TweetService {
 	 * @param item
 	 * @return
 	 */
+	public static int getCountByCategory(Category category) {
+		return find.where().eq("categoryId", category.categoryId)
+				.findRowCount();
+	}
+
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static Tweet getLatestTweetByCategory(Category category) {
+		List<Tweet> list = find.where().eq("categoryId", category.categoryId)
+				.orderBy().desc("tweetId").setMaxRows(1).findList();
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
 	public static int getCountByItem(Item item) {
 		return find.where().eq("itemId", item.itemId).findRowCount();
+	}
+
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static Tweet getLatestTweetByItem(Item item) {
+		List<Tweet> list = find.where().eq("itemId", item.itemId)
+				.orderBy().desc("tweetId").setMaxRows(1).findList();
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
 	}
 
 	/**

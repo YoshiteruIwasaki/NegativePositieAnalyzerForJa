@@ -1,11 +1,12 @@
-@(message: String, beanList: List[models.Category])
+@(message: String, beanList: List[beans.CategoryBean])
 
 @main(message) {
 <h1>カテゴリ一覧</h1>
 <ul>
 	@if(beanList != null && beanList.size() > 0){
 	    @for(bean <- beanList){
-	    <li><a href="/@{bean.categoryId}">@{bean.title}</a></li>
+	    <li><a href="/@{bean.getCategory.categoryId}">@{bean.getCategory.title}</a>
+	    <p>総数：@{bean.getTotalCount} 最新ツイート日時：@if(bean.getLatestTweetDate != null) {@{bean.getLatestTweetDateString}}</p></li>
 	    }
 	}
 </ul>

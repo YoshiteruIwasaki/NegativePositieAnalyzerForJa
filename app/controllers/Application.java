@@ -8,12 +8,15 @@ import models.Item;
 import models.Log;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.CategoryBeanService;
 import services.CategoryService;
 import services.ItemBeanService;
 import services.ItemService;
 import services.LogService;
+import services.TweetService;
 import views.html.index;
 import views.html.category;
+import beans.CategoryBean;
 import beans.ItemBean;
 
 public class Application extends Controller {
@@ -21,8 +24,13 @@ public class Application extends Controller {
 	public static Result index() {
 
 		List<Category> categoryList = CategoryService.getCategoryList();
+		ArrayList<CategoryBean> arrayList = new ArrayList<CategoryBean>();
+		for (Category category : categoryList) {
+			CategoryBean bean = CategoryBeanService.setCategoryBean(category);
+			arrayList.add(bean);
+		}
 
-		return ok(index.render("ネガポジ判定", categoryList));
+		return ok(index.render("ネガポジ判定", arrayList));
 	}
 
 	public static Result detail(Long categoryId) {
@@ -43,7 +51,7 @@ public class Application extends Controller {
 				}
 
 			}
-		}else{
+		} else {
 			List<Item> list = ItemService.getItemListByCategory(categoryBean);
 			if (list != null && list.size() > 0) {
 				for (Item item : list) {
