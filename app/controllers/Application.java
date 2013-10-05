@@ -13,11 +13,11 @@ import services.CategoryService;
 import services.ItemBeanService;
 import services.ItemService;
 import services.LogService;
-import services.TweetService;
-import views.html.index;
-import views.html.category;
 import beans.CategoryBean;
 import beans.ItemBean;
+
+import views.html.index;
+import views.html.category;
 
 public class Application extends Controller {
 

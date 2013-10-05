@@ -74,7 +74,7 @@
 	    <div class="row" id="itemDetail">
 	@if(tweetList != null && tweetList.size() > 0){
 	    @for(tweet <- tweetList){
-	    <div class="pull-left item" style="width:550px;">
+	    <div class="pull-left item">
 	    @if(tweet.getTweet().point > 0L) {
 	    <span class="label label-primary">ポジティブ</span>
 } else{
