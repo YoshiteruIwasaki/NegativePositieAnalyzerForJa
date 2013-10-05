@@ -11,10 +11,11 @@ import services.ItemBeanService;
 import services.ItemService;
 import services.TweetBeanService;
 import services.TweetService;
-import views.html.detail;
 import beans.DateItemBean;
 import beans.ItemBean;
 import beans.TweetBean;
+
+import views.html.detail;
 
 public class ItemDetail extends Controller {
 
