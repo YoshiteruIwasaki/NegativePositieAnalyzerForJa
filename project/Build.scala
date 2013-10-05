@@ -23,7 +23,7 @@ object ApplicationBuild extends Build {
 
   lazy val akb = play.Project(appName + "-akb", appVersion, appDependencies, path = file("modules/akb")).dependsOn(common)
 
-  val main = play.Project(appName, appVersion, appDependencies).settings( // Add your own project settings here
+  lazy val main = play.Project(appName, appVersion, appDependencies).settings( // Add your own project settings here
   ).dependsOn(common, akb).aggregate(common, akb)
 
 }
