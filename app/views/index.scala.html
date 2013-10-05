@@ -5,7 +5,7 @@
 <ul>
 	@if(beanList != null && beanList.size() > 0){
 	    @for(bean <- beanList){
-	    <li><a href="/@{bean.getCategory.categoryId}">@{bean.getCategory.title}</a>
+	    <li><a href="/category/@{bean.getCategory.categoryId}">@{bean.getCategory.title}</a>
 	    <p>総数：@{bean.getTotalCount} 最新ツイート日時：@if(bean.getLatestTweetDate != null) {@{bean.getLatestTweetDateString}}</p></li>
 	    }
 	}

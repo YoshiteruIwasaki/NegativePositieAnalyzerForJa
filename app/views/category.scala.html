@@ -11,7 +11,7 @@
   <div class="col-md-7">
   <h1>@Html({bean.getItem.title})</h1>
   <p>@Html({bean.getItem.description})</p>
-  <p><a class="btn btn-default" href="detail/@{category.categoryId}/@{bean.getItem.itemId}">詳細</a></p>
+  <p><a class="btn btn-default" href="/detail/@{category.categoryId}/@{bean.getItem.itemId}">詳細</a></p>
   <p><small>@if(bean.getItem.newsItemTitle) {@Html({bean.getItem.newsItemTitle})}</small></p>
   <p><small>@if(bean.getItem.newsItemSnippet) {@Html({bean.getItem.newsItemSnippet})}</small></p>
   <p><small>@if(bean.getItem.newsItemUrl && bean.getItem.newsItemSource) {<a href="@{bean.getItem.newsItemUrl}">@{bean.getItem.newsItemSource}</a>}</small></p>

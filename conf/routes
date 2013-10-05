@@ -4,7 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index()
-GET     /:id                           controllers.Application.detail(id:Long)
+GET     /category/:id                           controllers.Application.detail(id:Long)
 GET     /detail/:categoryId/:id                           controllers.ItemDetail.index(categoryId:Long, id:Long, page: Integer ?= 1)
 
 ->  /akb akb.Routes
