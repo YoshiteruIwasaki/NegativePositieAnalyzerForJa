@@ -1,7 +1,8 @@
-@(message: String)
+@(message: String, list: List[beans.RankingBean])
 
 @main(message) {
-<table class="table  table-striped">
+	@if(list != null && list.size() > 0){
+<table class="table table-condensed">
 <thead>
 <tr>
 <th>ランキング</th>
@@ -13,13 +14,29 @@
 </tr>
 </thead>
 <tbody>
+@for(ranking <- list){
 <tr>
+<td>@{ranking.getRanking.ranking}</td>
+<td>@{ranking.getItem.title}</td>
+<td>@{ranking.getRanking.totalCount}</td>
+<td><div class="progress">
+  <div class="progress-bar progress-bar-info" style="width: @{ranking.getCountPositivePercent}%">
+    <span class="sr-only">@{ranking.getCountPositivePercent}%</span>
+  </div>
+  <div class="progress-bar progress-bar-warning" style="width: @{ranking.getCountNeutralPercent}%">
+    <span class="sr-only">@{ranking.getCountNeutralPercent}%</span>
+  </div>
+  <div class="progress-bar progress-bar-danger" style="width: @{ranking.getCountNegativePercent}%">
+    <span class="sr-only">@{ranking.getCountNegativePercent}%</span>
+  </div>
+</div>
+</td>
+<td>@{ranking.getRanking.comparison}</td>
 <td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr></tbody>
+</tr>
+}
+</tbody>
 </table>
+
+	}
 }

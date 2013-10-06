@@ -28,6 +28,20 @@ public class RankingService {
 
 	/**
 	 *
+	 * 昨日のランキング取得
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static List<Ranking> getYesterdayRankingListByCategory(
+			Category category) {
+		return find.where().eq("categoryId", category.categoryId)
+				.eq("date", DateFormat.getLastDateStart()).order()
+				.asc("ranking").findList();
+	}
+
+	/**
+	 *
 	 * @param item
 	 * @return
 	 */
