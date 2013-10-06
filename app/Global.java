@@ -6,6 +6,7 @@ import play.libs.Akka;
 import rikyu.Rikyu;
 import scala.concurrent.duration.Duration;
 import tasks.FeedReader;
+import tasks.SetAkbRanking;
 import tasks.TwitterAnalyze;
 
 public class Global extends GlobalSettings {
@@ -28,6 +29,13 @@ public class Global extends GlobalSettings {
 				FeedReader.main();
 			}
 		};
+
+		Runnable setRanking = new Runnable() {
+			@Override
+			public void run() {
+				SetAkbRanking.main();
+			}
+		};
 		// 1時間ごとにRSS取得
 		Akka.system()
 				.scheduler()
@@ -39,6 +47,12 @@ public class Global extends GlobalSettings {
 				.scheduler()
 				.schedule(Duration.create(1, TimeUnit.SECONDS),
 						Duration.create(300, TimeUnit.SECONDS), getAnalyze,
+						Akka.system().dispatcher());
+		// 1時間ごとに前日のランキング集計
+		Akka.system()
+				.scheduler()
+				.schedule(Duration.create(0, TimeUnit.SECONDS),
+						Duration.create(1, TimeUnit.HOURS), setRanking,
 						Akka.system().dispatcher());
 
 	}

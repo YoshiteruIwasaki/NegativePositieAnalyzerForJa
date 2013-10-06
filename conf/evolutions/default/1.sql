@@ -47,6 +47,22 @@ create table log (
   constraint pk_log primary key (log_id))
 ;
 
+create table ranking (
+  ranking_id                bigint auto_increment not null,
+  item_id                   bigint not null,
+  category_id               bigint not null,
+  total_count               integer not null,
+  count_neutral             integer not null,
+  count_negative            integer not null,
+  count_positive            integer not null,
+  date                      datetime not null,
+  ranking                   integer not null,
+  comparison                integer not null,
+  create_date               datetime not null,
+  update_date               datetime not null,
+  constraint pk_ranking primary key (ranking_id))
+;
+
 create table tweet (
   tweet_id                  bigint auto_increment not null,
   category_id               bigint not null,
@@ -80,6 +96,8 @@ drop table category;
 drop table item;
 
 drop table log;
+
+drop table ranking;
 
 drop table tweet;
 

@@ -127,8 +127,8 @@ public class ItemService {
 		return item;
 	}
 
-	public static List<Item> getItemListByCategory(Category categoryBean) {
+	public static List<Item> getItemListByCategory(Category category) {
 		return ItemService.find.where()
-				.eq("categoryId", categoryBean.categoryId).findList();
+				.eq("categoryId", category.categoryId).findList();
 	}
 }

@@ -16,13 +16,15 @@ import services.LogService;
 import beans.CategoryBean;
 import beans.ItemBean;
 
+import utils.AkbApplicationConfigUtils;
 import views.html.akb.index;
 
 public class Application extends Controller {
 
 	public static Result index() {
 
-		return ok(index.render("ネガポジ判定"));
+
+		return ok(index.render(AkbApplicationConfigUtils.SITE_FULL_TITLE));
 	}
 
 }

@@ -1,7 +1,8 @@
 package services;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import models.Category;
@@ -18,6 +19,7 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Page;
 import com.avaje.ebean.PagingList;
 import com.avaje.ebean.SqlRow;
+import components.DateFormat;
 
 public class TweetService {
 
@@ -169,8 +171,8 @@ public class TweetService {
 	 * @return
 	 */
 	public static Tweet getLatestTweetByItem(Item item) {
-		List<Tweet> list = find.where().eq("itemId", item.itemId)
-				.orderBy().desc("tweetId").setMaxRows(1).findList();
+		List<Tweet> list = find.where().eq("itemId", item.itemId).orderBy()
+				.desc("tweetId").setMaxRows(1).findList();
 		if (list != null && list.size() > 0) {
 			return list.get(0);
 		}
@@ -184,6 +186,57 @@ public class TweetService {
 	 */
 	public static List<Tweet> getTweetByItem(Item item) {
 		return find.where().eq("itemId", item.itemId).findList();
+	}
+
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static List<Tweet> getTweetByItemLastDay(Item item) {
+		Date yesterday = DateFormat.getLastDateStart();
+		Date today = DateFormat.getTodayStart();
+		return find.where().eq("itemId", item.itemId)
+				.between("createdAt", yesterday, today).findList();
+	}
+
+	/**
+	 * ニュートラル
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static int countNeutralTweetByItemLastDay(Item item) {
+		Date yesterday = DateFormat.getLastDateStart();
+		Date today = DateFormat.getTodayStart();
+		return find.where().eq("itemId", item.itemId).eq("point", 0D)
+				.between("createdAt", yesterday, today).findRowCount();
+	}
+
+	/**
+	 * ネガティブ
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static int countNegativeTweetByItemLastDay(Item item) {
+		Date yesterday = DateFormat.getLastDateStart();
+		Date today = DateFormat.getTodayStart();
+		return find.where().eq("itemId", item.itemId).lt("point", 0D)
+				.between("createdAt", yesterday, today).findRowCount();
+	}
+
+	/**
+	 * ポジティブ
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static int countPositiveTweetByItemLastDay(Item item) {
+		Date yesterday = DateFormat.getLastDateStart();
+		Date today = DateFormat.getTodayStart();
+		return find.where().eq("itemId", item.itemId).gt("point", 0D)
+				.between("createdAt", yesterday, today).findRowCount();
 	}
 
 	/**
