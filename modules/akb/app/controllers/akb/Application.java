@@ -3,6 +3,8 @@ package controllers.akb;
 import java.util.ArrayList;
 import java.util.List;
 
+import components.DateFormat;
+
 import models.Category;
 import models.Item;
 import models.Log;
@@ -31,12 +33,19 @@ public class Application extends Controller {
 		Category category = CategoryService.find.byId(AkbApplicationConfigUtils.CATEGORY_ID);
 		List<Ranking> list = RankingService.getYesterdayRankingListByCategory(category);
 		ArrayList<RankingBean> arrayList = new ArrayList<RankingBean>();
+		int maxTweetCount = 0;
 		for(Ranking ranking : list){
+			maxTweetCount = maxTweetCount > ranking.totalCount ? maxTweetCount : ranking.totalCount;
 			RankingBean bean = RankingBeanService.setRankingBean(ranking);
 			arrayList.add(bean);
 		}
 
-		return ok(index.render(title, arrayList));
+
+		String h1 = AkbApplicationConfigUtils.SITE_SUB_TITLE;
+		String lastDate = DateFormat.getLastDateStartString();
+		String description = AkbApplicationConfigUtils.SITE_DESCRIPTION;
+
+		return ok(index.render(title, h1, lastDate, description, arrayList, maxTweetCount));
 	}
 
 }

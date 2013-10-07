@@ -1,25 +1,52 @@
-@(message: String, list: List[beans.RankingBean])
+@(message: String, h1String: String, dateString: String, description: String, list: List[beans.RankingBean], maxTweetCount: Integer)
 
 @main(message) {
+<div class="page-header">
+  <h1>@{h1String}<small>@{description}</small></h1>
+</div>
+<p>独自のアルゴリズムにより前日のツイートを解析してポジティブなツイートやネガティブなツイートの割合を算出し、ランキングを出しています。</p>
+<p class="text-right">@{dateString} 集計</p>
+<div>
+<a href="https://twitter.com/share" class="twitter-share-button" data-lang="ja" data-hashtags="negaposia">ツイート</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+<div class="g-plusone" data-size="medium"></div>
+</div>
 	@if(list != null && list.size() > 0){
 <table class="table table-condensed">
 <thead>
 <tr>
-<th>ランキング</th>
-<th>名前</th>
-<th>総数</th>
-<th>状況</th>
-<th>前日比</th>
+<th style="width:10%;">ランキング</th>
+<th style="width:10%;">名前</th>
+<th style="width:20%;">ツイート数</th>
+<th style="width:60%;">内訳</th>
 <th></th>
 </tr>
 </thead>
 <tbody>
 @for(ranking <- list){
 <tr>
-<td>@{ranking.getRanking.ranking}</td>
+<td>
+
+@if(ranking.getRanking.comparison > 0){
+<span class="label label-warning"><span class="glyphicon glyphicon-arrow-up"></span></span>
+}else{ @if(ranking.getRanking.comparison < 0){
+<span class="label label-default"><span class="glyphicon glyphicon-arrow-down"></span></span>
+}else{
+<span class="label label-primary"><span class="glyphicon glyphicon-arrow-right"></span></span>
+}
+}
+@{ranking.getRanking.ranking}
+</td>
 <td>@{ranking.getItem.title}</td>
-<td>@{ranking.getRanking.totalCount}</td>
-<td><div class="progress">
+<td>
+<div class="progress" style="margin-bottom:0;">
+  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@{ranking.getRanking.totalCount*100 / maxTweetCount}" aria-valuemin="0" aria-valuemax="100" style="width: @{ranking.getRanking.totalCount*100 / maxTweetCount}%;">
+    <span class="sr-only">@{ranking.getRanking.totalCount*100 / maxTweetCount}% Complete</span>
+  </div>
+</div>
+
+</td>
+<td><div class="progress" style="margin-bottom:0;">
   <div class="progress-bar progress-bar-info" style="width: @{ranking.getCountPositivePercent}%">
     <span class="sr-only">@{ranking.getCountPositivePercent}%</span>
   </div>
@@ -31,12 +58,16 @@
   </div>
 </div>
 </td>
-<td>@{ranking.getRanking.comparison}</td>
-<td></td>
 </tr>
 }
 </tbody>
 </table>
 
 	}
+<p class="text-right">
+<span class="label label-info">ポジティブ</span>
+<span class="label label-warning">ニュートラル</span>
+<span class="label label-danger">ネガティブ</span>
+</p>
+<small class="text-muted">各メンバーごとの詳細画面については準備中です。</small>
 }

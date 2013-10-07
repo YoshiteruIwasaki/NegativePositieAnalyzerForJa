@@ -1,5 +1,6 @@
 package components;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -14,6 +15,7 @@ public class DateFormat {
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal.getTime();
 	}
+
 	public static Date getPreviousDateStart() {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -2);
@@ -31,5 +33,10 @@ public class DateFormat {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal.getTime();
+	}
+
+	public static String getLastDateStartString() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy'年'MM'月'dd'日'");
+		return simpleDateFormat.format(getLastDateStart());
 	}
 }
