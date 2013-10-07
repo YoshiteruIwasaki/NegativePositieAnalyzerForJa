@@ -39,12 +39,13 @@
 </td>
 <td>@{ranking.getItem.title}</td>
 <td>
+@if(maxTweetCount>0){
 <div class="progress" style="margin-bottom:0;">
   <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@{ranking.getRanking.totalCount*100 / maxTweetCount}" aria-valuemin="0" aria-valuemax="100" style="width: @{ranking.getRanking.totalCount*100 / maxTweetCount}%;">
     <span class="sr-only">@{ranking.getRanking.totalCount*100 / maxTweetCount}% Complete</span>
   </div>
 </div>
-
+}
 </td>
 <td><div class="progress" style="margin-bottom:0;">
   <div class="progress-bar progress-bar-info" style="width: @{ranking.getCountPositivePercent}%">

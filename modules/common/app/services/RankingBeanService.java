@@ -11,14 +11,14 @@ public class RankingBeanService {
 		RankingBean bean = new RankingBean();
 		bean.setRanking(ranking);
 		bean.setItem(item);
-		int countNegativePercent = Math.round(ranking.countNegative * 100
-				/ ranking.totalCount);
+		int countNegativePercent = ranking.totalCount > 0 ? Math
+				.round(ranking.countNegative * 100 / ranking.totalCount) : 0;
 		bean.setCountNegativePercent(countNegativePercent);
-		int countPositivePercent = Math.round(ranking.countPositive * 100
-				/ ranking.totalCount);
+		int countPositivePercent = ranking.totalCount > 0 ? Math
+				.round(ranking.countPositive * 100 / ranking.totalCount) : 0;
 		bean.setCountPositivePercent(countPositivePercent);
-		int countNeutralPercent = 100 - countNegativePercent
-				- countPositivePercent;
+		int countNeutralPercent = ranking.totalCount > 0 ? 100
+				- countNegativePercent - countPositivePercent : 0;
 		bean.setCountNeutralPercent(countNeutralPercent);
 		return bean;
 
