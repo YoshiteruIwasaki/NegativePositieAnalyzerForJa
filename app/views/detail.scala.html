@@ -46,10 +46,11 @@
         ]);
 
         var options = {
-          title: '時系列'
+          title: '時系列',
+          isStacked: true
         };
 
-        var chart = new google.visualization.LineChart(document.getElementById('daily_chart_div@{bean.getItem.itemId}'));
+        var chart = new google.visualization.ColumnChart(document.getElementById('daily_chart_div@{bean.getItem.itemId}'));
         chart.draw(data, options);
       }
     </script>
