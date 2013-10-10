@@ -3,10 +3,15 @@ package services;
 import java.util.Date;
 import java.util.List;
 
+import com.avaje.ebean.Page;
+import com.avaje.ebean.PagingList;
+
 import models.Category;
 import models.Item;
 import models.Ranking;
+import models.Tweet;
 import play.db.ebean.Model.Finder;
+import utils.ApplicationConfigUtils;
 
 import components.DateFormat;
 
@@ -97,4 +102,43 @@ public class RankingService {
 		return ranking;
 	}
 
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static PagingList<Ranking> getRankingCriteria(Item item) {
+		return find.where().eq("itemId", item.itemId).orderBy().desc("date")
+				.findPagingList(ApplicationConfigUtils.MAX_PER_PAGE);
+	}
+
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static List<Ranking> getRankingResultList(Item item, Integer page) {
+		PagingList<Ranking> pagingList = getRankingCriteria(item);
+		Page<Ranking> currentPage = pagingList.getPage(page - 1);
+		return currentPage.getList();
+	}
+
+	public static List<Ranking> getRankingListByItem(Item item) {
+		return find.where().eq("itemId", item.itemId).orderBy().asc("date")
+				.findList();
+	}
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static Ranking getLatestRanking(Long itemId) {
+		List<Ranking> findList =  find.where().eq("itemId", itemId)
+				.eq("date", DateFormat.getLastDateStart()).findList();
+		if (findList.size() > 0) {
+			return findList.get(0);
+
+		}
+		return null;
+	}
 }

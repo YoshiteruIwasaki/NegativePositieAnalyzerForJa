@@ -1,5 +1,7 @@
 package beans;
 
+import java.text.SimpleDateFormat;
+
 import models.Item;
 import models.Ranking;
 
@@ -53,5 +55,11 @@ public class RankingBean {
 
 	public void setCountNegativePercent(int countNegativePercent) {
 		this.countNegativePercent = countNegativePercent;
+	}
+
+	public String getRankingDateString() {
+		SimpleDateFormat sdf1 = new SimpleDateFormat(
+				"yyyy'年'MM'月'dd'日'");
+		return sdf1.format(ranking.date);
 	}
 }

@@ -1,7 +1,7 @@
 package services;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +18,7 @@ import beans.DateItemBean;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Page;
 import com.avaje.ebean.PagingList;
+import com.avaje.ebean.Query;
 import com.avaje.ebean.SqlRow;
 import components.DateFormat;
 
@@ -303,4 +304,57 @@ public class TweetService {
 
 	}
 
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static int getCountGroupByItem(Item item) {
+		String sql = "SELECT count(*) AS count FROM (SELECT count(*) FROM tweet WHERE item_id = :item_id"
+				+ " GROUP BY text" + " ORDER BY created_at DESC) AS temp";
+		List<SqlRow> sqlRows = Ebean.createSqlQuery(sql)
+				.setParameter("item_id", item.itemId).findList();
+
+		Integer count = 0;
+		for (SqlRow row : sqlRows) {
+			count = row.getInteger("count");
+			break;
+		}
+		return count;
+	}
+
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static PagingList<Tweet> getTweetGroupCriteria(Item item) {
+		String sql = "find tweet WHERE item_id = :item_id" + " GROUP BY text"
+				+ " ORDER BY created_at DESC";
+		Query<Tweet> query = Ebean.createQuery(Tweet.class, sql);
+		query.setParameter("item_id", item.itemId);
+		return query.findPagingList(ApplicationConfigUtils.MAX_PER_PAGE);
+	}
+
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static List<Tweet> getTweetGroupResultList(Item item, Integer page) {
+		PagingList<Tweet> pagingList = getTweetGroupCriteria(item);
+		Page<Tweet> currentPage = pagingList.getPage(page - 1);
+		return currentPage.getList();
+	}
+
+	/**
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static Integer getTweetGroupResultCount(Item item, Integer page) {
+		int count = getCountGroupByItem(item);
+		return count > 0 ? (int) Math.ceil(count
+				/ ApplicationConfigUtils.MAX_PER_PAGE) + 2 : 0;
+	}
 }
