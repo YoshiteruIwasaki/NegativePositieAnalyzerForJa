@@ -3,16 +3,14 @@ package services;
 import java.util.Date;
 import java.util.List;
 
-import com.avaje.ebean.Page;
-import com.avaje.ebean.PagingList;
-
 import models.Category;
 import models.Item;
 import models.Ranking;
-import models.Tweet;
 import play.db.ebean.Model.Finder;
 import utils.ApplicationConfigUtils;
 
+import com.avaje.ebean.Page;
+import com.avaje.ebean.PagingList;
 import components.DateFormat;
 
 public class RankingService {
@@ -127,18 +125,30 @@ public class RankingService {
 		return find.where().eq("itemId", item.itemId).orderBy().asc("date")
 				.findList();
 	}
+
 	/**
 	 *
 	 * @param item
 	 * @return
 	 */
 	public static Ranking getLatestRanking(Long itemId) {
-		List<Ranking> findList =  find.where().eq("itemId", itemId)
+		List<Ranking> findList = find.where().eq("itemId", itemId)
 				.eq("date", DateFormat.getLastDateStart()).findList();
 		if (findList.size() > 0) {
 			return findList.get(0);
 
 		}
 		return null;
+	}
+
+	/**
+	 * ランキング推移表示用
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static List<Ranking> getRankingListByCategory(Category category) {
+		return find.where().eq("categoryId", category.categoryId).order()
+				.asc("date").order().asc("itemId").setDistinct(true).findList();
 	}
 }

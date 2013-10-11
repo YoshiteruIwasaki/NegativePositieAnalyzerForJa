@@ -1,4 +1,4 @@
-@(message: String, h1String: String, dateString: String, description: String, list: List[beans.RankingBean], maxTweetCount: Integer)
+@(message: String, h1String: String, dateString: String, description: String, list: List[beans.RankingBean], maxTweetCount: Integer, itemList: List[models.Item], rankingMap: LinkedHashMap[String, LinkedHashMap[Long, Integer]])
 
 @main(message, message) {
 <div class="page-header">
@@ -87,5 +87,32 @@
 <span class="label label-warning">ニュートラル</span>
 <span class="label label-danger">ネガティブ</span>
 </p>
-<small>ツイート解析アルゴリズムは随時改善中です。ランキングはあくまでも参考であり、推しメン同士のトラブルの責任は負いかねます。</small>
+
+
+  <div id="ranking_chart_div"></div>
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Date', @for(item <- itemList){'@{item.title}', }],
+          @for((key, map) <- rankingMap){
+          ['@key,', @for((itemid, rank) <- map){@{rank}, }],
+          }
+        ]);
+
+        var options = {
+      //  legend:{position: 'none'},
+      height:800,
+          title: '時系列',
+          titlePosition: 'none',
+          pointSize: 8,
+          vAxis: {direction:-1,
+        baseline: 48},
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('ranking_chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
 }

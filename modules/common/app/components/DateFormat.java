@@ -39,4 +39,10 @@ public class DateFormat {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy'年'MM'月'dd'日'");
 		return simpleDateFormat.format(getLastDateStart());
 	}
+
+	public static String getRankingDateString(Date date) {
+		SimpleDateFormat sdf1 = new SimpleDateFormat(
+				"yyyy'年'MM'月'dd'日'");
+		return sdf1.format(date);
+	}
 }

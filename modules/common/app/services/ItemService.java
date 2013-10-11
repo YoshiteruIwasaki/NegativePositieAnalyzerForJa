@@ -129,6 +129,6 @@ public class ItemService {
 
 	public static List<Item> getItemListByCategory(Category category) {
 		return find.where()
-				.eq("categoryId", category.categoryId).findList();
+				.eq("categoryId", category.categoryId).order().asc("itemId").findList();
 	}
 }
