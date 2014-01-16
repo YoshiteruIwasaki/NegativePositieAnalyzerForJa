@@ -12,6 +12,7 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterUtils {
 
@@ -21,7 +22,8 @@ public class TwitterUtils {
 	 * @return
 	 */
 	private static Twitter getTwitterInstance(Category category) {
-		Twitter twitter = new TwitterFactory().getInstance();
+		 ConfigurationBuilder conf = new ConfigurationBuilder().setUseSSL(true);
+		Twitter twitter = new TwitterFactory(conf.build()).getInstance();
 		twitter.setOAuthConsumer(category.consumerKey, category.consumerSecret);
 		twitter4j.auth.AccessToken accessToken = new twitter4j.auth.AccessToken(
 				category.accessToken, category.accessTokenSecret);
