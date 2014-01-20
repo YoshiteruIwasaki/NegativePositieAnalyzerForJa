@@ -17,16 +17,14 @@ import services.RankingService;
 import services.TweetService;
 import utils.ScoreUtils;
 
-public class SetAkbRanking {
+public class SetRanking {
 
-	public static final Long CATEGORY_ID = 5L;
-
-	public static void main() {
+	public static void main(long categoryId) {
 
 		HashMap<Ranking, Double> hashMap = new HashMap<Ranking, Double>();
 		int rank = 0;
 
-		Category category = CategoryService.find.byId(CATEGORY_ID);
+		Category category = CategoryService.find.byId(categoryId);
 
 		if (!RankingService.hasYesterdayRankingByCategory(category)) {
 			List<Item> itemList = ItemService.getItemListByCategory(category);
@@ -38,7 +36,7 @@ public class SetAkbRanking {
 						.countPositiveTweetByItemLastDay(item);
 				int countNeutral = TweetService
 						.countNeutralTweetByItemLastDay(item);
-				Ranking ranking = RankingService.saveRanking(item, CATEGORY_ID,
+				Ranking ranking = RankingService.saveRanking(item, categoryId,
 						countPositive, countNegative, countNeutral);
 				// スコアセット
 				double score = ScoreUtils.getScore(ranking);

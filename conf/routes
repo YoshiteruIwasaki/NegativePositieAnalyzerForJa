@@ -8,6 +8,7 @@ GET     /category/:id                           controllers.Application.detail(i
 GET     /detail/:categoryId/:id                           controllers.ItemDetail.index(categoryId:Long, id:Long, page: Integer ?= 1)
 
 ->  /akb akb.Routes
+->  /tokyo tokyo.Routes
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

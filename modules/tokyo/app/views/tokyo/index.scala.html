@@ -1,0 +1,118 @@
+@(message: String, h1String: String, dateString: String, description: String, list: List[beans.RankingBean], maxTweetCount: Integer, itemList: List[models.Item], rankingMap: LinkedHashMap[String, LinkedHashMap[Long, Integer]])
+
+@main(message, message) {
+<div class="page-header">
+  <h1>@{h1String}<small>@{description}</small></h1>
+</div>
+<p>独自のアルゴリズムにより前日のツイートを解析してポジティブなツイートやネガティブなツイートの割合を算出し、ランキングを出しています。</p>
+<p class="text-right">@{dateString} 集計</p>
+<div class="clearfix">
+<div class="pull-left">
+<a href="https://twitter.com/share" class="twitter-share-button" data-lang="ja" data-hashtags="negaposia">ツイート</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+</div>
+<div class="pull-left">
+<div class="g-plusone" data-size="medium"></div>
+</div>
+<!--
+<div class="fb-like" data-href="********URL********" data-send="false" data-layout="button_count" data-width="200" data-show-faces="false" data-font="arial"></div>
+<a href="http://b.hatena.ne.jp/entry/********URL********" class="hatena-bookmark-button"
+						data-hatena-bookmark-title="********TITLE********" data-hatena-bookmark-layout="simple-balloon"
+						title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only@@2x.png"
+						alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+						<script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  <a href="http://line.naver.jp/R/msg/text/?********URL********" target="_blank"><img src="/assets/img/linebutton_88x20.png" width="86px" height="20px" alt="LINEで送る" /></a>
+-->
+<div class="pull-left">
+<a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="ja"></a>
+<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+</div>
+ </div>
+	@if(list != null && list.size() > 0){
+<table class="table table-condensed">
+<thead>
+<tr>
+<th style="width:5%;">順位</th>
+<th style="width:10%;">名前</th>
+<th style="width:10%;">ツイート数</th>
+<th style="width:75%;">内訳</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+@for(ranking <- list){
+<tr>
+<td>
+
+@if(ranking.getRanking.comparison > 0){
+<span class="label label-warning"><span class="glyphicon glyphicon-arrow-up"></span></span>
+}else{ @if(ranking.getRanking.comparison < 0){
+<span class="label label-default"><span class="glyphicon glyphicon-arrow-down"></span></span>
+}else{
+<span class="label label-primary"><span class="glyphicon glyphicon-arrow-right"></span></span>
+}
+}
+@{ranking.getRanking.ranking}
+</td>
+<td><a href="@controllers.tokyo.routes.Detail.index(ranking.getItem.itemId)">@{ranking.getItem.title}</a></td>
+<td>
+@if(maxTweetCount>0){
+<div class="progress" style="margin-bottom:0;">
+  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@{ranking.getRanking.totalCount*100 / maxTweetCount}" aria-valuemin="0" aria-valuemax="100" style="width: @{ranking.getRanking.totalCount*100 / maxTweetCount}%;">
+    <span class="sr-only">@{ranking.getRanking.totalCount*100 / maxTweetCount}% Complete</span>
+  </div>
+</div>
+}
+</td>
+<td><div class="progress" style="margin-bottom:0;">
+  <div class="progress-bar progress-bar-info" style="width: @{ranking.getCountPositivePercent}%">
+    <span class="sr-only">@{ranking.getCountPositivePercent}%</span>
+  </div>
+  <div class="progress-bar progress-bar-warning" style="width: @{ranking.getCountNeutralPercent}%">
+    <span class="sr-only">@{ranking.getCountNeutralPercent}%</span>
+  </div>
+  <div class="progress-bar progress-bar-danger" style="width: @{ranking.getCountNegativePercent}%">
+    <span class="sr-only">@{ranking.getCountNegativePercent}%</span>
+  </div>
+</div>
+</td>
+</tr>
+}
+</tbody>
+</table>
+
+	}
+<p class="text-right">
+<span class="label label-info">ポジティブ</span>
+<span class="label label-warning">ニュートラル</span>
+<span class="label label-danger">ネガティブ</span>
+</p>
+
+
+  <div id="ranking_chart_div"></div>
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Date', @for(item <- itemList){'@{item.title}', }],
+          @for((key, map) <- rankingMap){
+          ['@key,', @for((itemid, rank) <- map){@{rank}, }],
+          }
+        ]);
+
+        var options = {
+      //  legend:{position: 'none'},
+      height:800,
+          title: '時系列',
+          titlePosition: 'none',
+          pointSize: 8,
+          vAxis: {direction:-1,
+        baseline: 1},
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('ranking_chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+}

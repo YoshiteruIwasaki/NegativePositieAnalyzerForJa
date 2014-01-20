@@ -23,7 +23,9 @@ object ApplicationBuild extends Build {
 
   lazy val akb = play.Project(appName + "-akb", appVersion, appDependencies, path = file("modules/akb")).dependsOn(common)
 
+  lazy val tokyo = play.Project(appName + "-tokyo", appVersion, appDependencies, path = file("modules/tokyo")).dependsOn(common)
+
   lazy val main = play.Project(appName, appVersion, appDependencies).settings( // Add your own project settings here
-  ).dependsOn(common, akb).aggregate(common, akb)
+  ).dependsOn(common, akb, tokyo).aggregate(common, akb, tokyo)
 
 }

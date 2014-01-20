@@ -6,10 +6,14 @@ import play.libs.Akka;
 import rikyu.Rikyu;
 import scala.concurrent.duration.Duration;
 import tasks.FeedReader;
-import tasks.SetAkbRanking;
+import tasks.SetRanking;
 import tasks.TwitterAnalyze;
 
 public class Global extends GlobalSettings {
+
+	public static final Long AKB_CATEGORY_ID = 5L;
+
+	public static final Long TOKYO_CATEGORY_ID = 8L;
 
 	@Override
 	public void onStart(Application app) {
@@ -33,7 +37,8 @@ public class Global extends GlobalSettings {
 		Runnable setRanking = new Runnable() {
 			@Override
 			public void run() {
-				SetAkbRanking.main();
+				SetRanking.main(AKB_CATEGORY_ID);
+				SetRanking.main(TOKYO_CATEGORY_ID);
 			}
 		};
 		// 1時間ごとにRSS取得

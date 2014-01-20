@@ -1,0 +1,199 @@
+@(message: String, siteTitle: String, bean: beans.ItemBean, tweetList: List[beans.TweetBean], currentPage: Integer, pageCount: Integer, countByItem: Integer, dateList: List[beans.DateItemBean], latestRanking: beans.RankingBean, rankingList: List[beans.RankingBean], dateString: String)
+
+@main(message, siteTitle) {
+
+<div class="page-header">
+  <h1>@{bean.getItem.title}<small></small></h1>
+</div>
+
+<div class="clearfix">
+<div class="pull-left">
+<a href="https://twitter.com/share" class="twitter-share-button" data-lang="ja" data-hashtags="negaposia">ツイート</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+</div>
+<div class="pull-left">
+<div class="g-plusone" data-size="medium"></div>
+</div>
+<!--
+<div class="fb-like" data-href="********URL********" data-send="false" data-layout="button_count" data-width="200" data-show-faces="false" data-font="arial"></div>
+<a href="http://b.hatena.ne.jp/entry/********URL********" class="hatena-bookmark-button"
+						data-hatena-bookmark-title="********TITLE********" data-hatena-bookmark-layout="simple-balloon"
+						title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only@@2x.png"
+						alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+						<script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  <a href="http://line.naver.jp/R/msg/text/?********URL********" target="_blank"><img src="/assets/img/linebutton_88x20.png" width="86px" height="20px" alt="LINEで送る" /></a>
+-->
+<div class="pull-left">
+<a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="ja"></a>
+<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+</div>
+ </div>
+
+<div class="row">
+  <div class="col-xs-6"><h3>全期間での支持率</h3>
+  <div id="chart_div"></div>
+
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['ポジティブ',     @{bean.getCountPositive}],
+          ['ネガティブ',  @{bean.getCountNegative}],
+          ['ニュートラル',      @{bean.getCountNeutral}]
+        ]);
+
+        var options = {
+          title: '',
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+</script>
+</div>
+<div class="col-xs-6"><h3>現在のランキング</h3>
+@if(latestRanking != null && latestRanking.getRanking != null){
+<p class="lead text-center"><strong style="font-size:72px;" class="text-success">@{latestRanking.getRanking.ranking}</strong>位
+@if(latestRanking.getRanking.comparison > 0){
+<span class="label label-warning"><span class="glyphicon glyphicon-arrow-up"></span></span>
+}else{ @if(latestRanking.getRanking.comparison < 0){
+<span class="label label-default"><span class="glyphicon glyphicon-arrow-down"></span></span>
+}else{
+<span class="label label-primary"><span class="glyphicon glyphicon-arrow-right"></span></span>
+}
+}
+</p>
+<p class="lead">前日のツイート数&nbsp;:&nbsp;<span class="text-info">@{latestRanking.getRanking.totalCount}件</span></p>
+<div class="progress" style="margin-bottom:0;">
+  <div class="progress-bar progress-bar-info" style="width: @{latestRanking.getCountPositivePercent}%">
+    <span class="sr-only">@{latestRanking.getCountPositivePercent}%</span>
+  </div>
+  <div class="progress-bar progress-bar-warning" style="width: @{latestRanking.getCountNeutralPercent}%">
+    <span class="sr-only">@{latestRanking.getCountNeutralPercent}%</span>
+  </div>
+  <div class="progress-bar progress-bar-danger" style="width: @{latestRanking.getCountNegativePercent}%">
+    <span class="sr-only">@{latestRanking.getCountNegativePercent}%</span>
+  </div>
+</div>
+}else{
+<div class="alert alert-info"><p class="lead">集計中</p></div>
+}
+</div>
+</div>
+
+<h3>ランキング推移</h3>
+  <div id="ranking_chart_div"></div>
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Date', 'ランキング'],
+	    @for(item <- rankingList){
+          ['@{item.getRankingDateString}',  @{item.getRanking().ranking}],
+          }
+        ]);
+
+        var options = {
+        legend:{position: 'none'},
+          title: '時系列',
+          titlePosition: 'none',
+    pointSize: 8,
+          vAxis: {direction:-1,
+        baseline: 48},
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('ranking_chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+
+<h3>分布推移</h3>
+  <div id="daily_chart_div"></div>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Date', 'ポジティブ', 'ネガティブ', 'ニュートラル'],
+	    @for(item <- dateList){
+          ['@{item.getDate}',  @{item.getCountPositive},       @{item.getCountNegative}, @{item.getCountNeutral}],
+          }
+        ]);
+
+        var options = {
+          title: '時系列',
+          titlePosition: 'none',
+          isStacked: true
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('daily_chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+
+<h3>ツイート一覧</h3>
+
+<div class="clearfix">
+<div class="pull-right"><ul class="pager">
+	@if(currentPage == 1) {
+		<li class="disabled"><span>&laquo; 最新のツイート</span></li>
+	} else {
+		<li class=""><a href="@controllers.tokyo.routes.Detail.index(bean.getItem.itemId, currentPage - 1)">&laquo; 最新のツイート</a></li>
+	}
+	@if(currentPage == (pageCount-1)) {
+		<li class="disabled"><span>&raquo; 過去のツイート</span></li>
+	} else {
+		<li class=""><a href="@controllers.tokyo.routes.Detail.index(bean.getItem.itemId, currentPage + 1)">&raquo; 過去のツイート</a></li>
+	}
+</ul>
+</div>
+<div class="pull-right" style="margin:25px 10px 0px 0px">
+@{currentPage}/@{pageCount -1}ページ :@{countByItem}件
+</div>
+</div>
+
+<div class="row" id="itemDetail">
+	@if(tweetList != null && tweetList.size() > 0){
+	    @for(tweet <- tweetList){
+	    <div class="pull-left item">
+	    @if(tweet.getTweet().point > 0L) {
+	    <span class="label label-primary">ポジティブ</span>
+} else{
+@if(tweet.getTweet().point < 0L) {
+	    <span class="label label-danger">ネガティブ</span>
+}else{
+	    <span class="label label-warning">ニュートラル</span>
+	    }
+	    }
+	    <blockquote class="twitter-tweet" lang="ja" width="550"><p>@{tweet.getTweet().text}</p>&mdash; @{tweet.getTweet().tweeterUsetName} (@@@{tweet.getTweet().tweeterUserScreenName})
+	    <a href="@{tweet.getUrl}" data-datetime="@{tweet.getDatetime}">@{tweet.getTweet().createdAt}</a></blockquote>
+	    </div>
+	    }
+	}
+	    </div>
+
+
+
+<div class="clearfix">
+<div class="pull-right"><ul class="pager">
+	@if(currentPage == 1) {
+		<li class="disabled"><span>&laquo; 最新のツイート</span></li>
+	} else {
+		<li class=""><a href="@controllers.tokyo.routes.Detail.index(bean.getItem.itemId, currentPage - 1)">&laquo; 最新のツイート</a></li>
+	}
+	@if(currentPage == (pageCount-1)) {
+		<li class="disabled"><span>&raquo; 過去のツイート</span></li>
+	} else {
+		<li class=""><a href="@controllers.tokyo.routes.Detail.index(bean.getItem.itemId, currentPage + 1)">&raquo; 過去のツイート</a></li>
+	}
+</ul>
+</div>
+<div class="pull-right" style="margin:25px 10px 0px 0px">
+@{currentPage}/@{pageCount -1}ページ :@{countByItem}件
+</div>
+</div>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+}
