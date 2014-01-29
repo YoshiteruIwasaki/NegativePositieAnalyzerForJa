@@ -36,6 +36,9 @@ public class Application extends Controller {
 	public static Result detail(Long categoryId) {
 
 		Category categoryBean = CategoryService.find.byId(categoryId);
+		if (categoryBean == null){
+			return notFound();
+		}
 
 		ArrayList<ItemBean> arrayList = new ArrayList<ItemBean>();
 		if (categoryBean != null && categoryBean.link != null
