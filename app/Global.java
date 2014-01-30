@@ -56,7 +56,7 @@ public class Global extends GlobalSettings {
 		// 1時間ごとに前日のランキング集計
 		Akka.system()
 				.scheduler()
-				.schedule(Duration.create(0, TimeUnit.SECONDS),
+				.schedule(Duration.create(60, TimeUnit.SECONDS),
 						Duration.create(1, TimeUnit.HOURS), setRanking,
 						Akka.system().dispatcher());
 
