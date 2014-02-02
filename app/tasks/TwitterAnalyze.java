@@ -24,7 +24,7 @@ public class TwitterAnalyze {
 						.getLogToday(category.categoryId);
 				itemList = ItemService.getItemList(feedList);
 			} else {
-				itemList = ItemService.getItemListByCategory(category);
+				itemList = ItemService.getCacheItemListByCategory(category);
 			}
 			EvaluationUtils.getTweetList(itemList, category);
 		}

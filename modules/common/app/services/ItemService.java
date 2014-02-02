@@ -133,6 +133,10 @@ public class ItemService {
 				.asc("itemId").findList();
 	}
 
+	public static Item getItem(Long itemId) {
+		return find.byId(itemId);
+	}
+
 	/**
 	 *
 	 * 昨日のランキング取得
@@ -148,5 +152,20 @@ public class ItemService {
 		return (List<Item>) CacheService.getObject(ItemService.class,
 				CacheService.KeyType.LIST, keys, "getItemListByCategory",
 				param, arguments);
+	}
+
+	/**
+	 *
+	 * 昨日のランキング取得
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static Item getCacheItem(Long itemId) {
+		String[] keys = { String.valueOf(itemId) };
+		Class<?>[] param = new Class[] { Long.class };
+		Object[] arguments = { itemId };
+		return (Item) CacheService.getObject(ItemService.class,
+				CacheService.KeyType.DETAIL, keys, "getItem", param, arguments);
 	}
 }

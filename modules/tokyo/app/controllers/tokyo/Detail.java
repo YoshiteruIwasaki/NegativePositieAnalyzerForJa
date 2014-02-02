@@ -31,7 +31,7 @@ public class Detail extends Controller {
 		ArrayList<TweetBean> arrayList = new ArrayList<TweetBean>();
 		ArrayList<RankingBean> rankingBeanList = new ArrayList<RankingBean>();
 
-		Item item = ItemService.find.byId(itemId);
+		Item item = ItemService.getCacheItem(itemId);
 		if (item != null) {
 			String  title = TokyoApplicationConfigUtils.getSiteFullTitle("[" + item.title + "] " + TokyoApplicationConfigUtils.SITE_SUB_TITLE);
 			String  siteTitle = TokyoApplicationConfigUtils.getSiteFullTitle(TokyoApplicationConfigUtils.SITE_SUB_TITLE);
@@ -50,12 +50,12 @@ public class Detail extends Controller {
 			List<DateItemBean> dateList = TweetService.getTweetResultListGroupByDate(item);
 
 			//ランキング
-			Ranking latestRanking = RankingService.getLatestRanking(item.itemId);
+			Ranking latestRanking = RankingService.getCacheLatestRanking(item.itemId);
 			RankingBean latestRankingBean = new RankingBean();
 			if(latestRanking != null){
 				 latestRankingBean = RankingBeanService.setRankingBean(latestRanking);
 			}
-			List<Ranking> rankingList = RankingService.getRankingListByItem(item);
+			List<Ranking> rankingList = RankingService.getCacheRankingListByItem(item);
 			for (Ranking ranking : rankingList) {
 				RankingBean rankingBean = RankingBeanService.setRankingBean(ranking);
 				rankingBeanList.add(rankingBean);

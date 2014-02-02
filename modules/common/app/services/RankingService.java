@@ -191,4 +191,39 @@ public class RankingService {
 				CacheService.KeyType.LIST, keys, "getRankingListByCategory",
 				param, arguments);
 	}
+
+	/**
+	 *
+	 * 昨日のランキング取得
+	 *
+	 * @param item
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<Ranking> getCacheRankingListByItem(Item item) {
+		String[] keys = { String.valueOf(item.itemId) };
+		Class<?>[] param = new Class[] { Item.class };
+		Object[] arguments = { item };
+		return (List<Ranking>) CacheService.getObject(RankingService.class,
+				CacheService.KeyType.LIST, keys, "getRankingListByItem",
+				param, arguments);
+	}
+
+	/**
+	 *
+	 * 昨日のランキング取得
+	 *
+	 * @param item
+	 * @return
+	 */
+	public static Ranking getCacheLatestRanking(Long itemId) {
+		Date date = DateFormat.getLastDateStart();
+		String timestamp = DateFormat.getTimestampString(date);
+		String[] keys = { String.valueOf(itemId), String.valueOf(timestamp) };
+		Class<?>[] param = new Class[] { Long.class };
+		Object[] arguments = { itemId };
+		return (Ranking) CacheService.getObject(RankingService.class,
+				CacheService.KeyType.DETAIL, keys, "getLatestRanking", param,
+				arguments);
+	}
 }
