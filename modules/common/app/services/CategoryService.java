@@ -4,6 +4,7 @@ import java.util.List;
 
 import models.Category;
 import play.db.ebean.Model.Finder;
+import cache.CacheService;
 
 public class CategoryService {
 
@@ -26,5 +27,28 @@ public class CategoryService {
 	 */
 	public static List<Category> getFeedCategoryList() {
 		return find.where().isNotNull("link").findList();
+	}
+
+	/**
+	 * Category取得
+	 *
+	 * @return
+	 */
+	public static Category getCateory(Long categoryId) {
+		return find.byId(categoryId);
+	}
+
+	/**
+	 * Category取得
+	 *
+	 * @return
+	 */
+	public static Category getCacheCateory(Long categoryId) {
+		String[] keys = { String.valueOf(categoryId) };
+		Class<?>[] param = new Class[] { Long.class };
+		Object[] arguments = { categoryId };
+		return (Category) CacheService.getObject(CategoryService.class,
+				CacheService.KeyType.DETAIL, keys, "getCateory", param,
+				arguments);
 	}
 }

@@ -45,4 +45,10 @@ public class DateFormat {
 				"yyyy'年'MM'月'dd'日'");
 		return sdf1.format(date);
 	}
+
+	public static String getTimestampString(Date date) {
+		SimpleDateFormat sdf1 = new SimpleDateFormat(
+				"yyyyMMddHHmmss");
+		return sdf1.format(date);
+	}
 }

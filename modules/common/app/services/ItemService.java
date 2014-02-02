@@ -13,6 +13,7 @@ import org.jdom.Element;
 import play.db.ebean.Model.Finder;
 import rikyu.model.Sentence;
 import utils.RikyuUtils;
+import cache.CacheService;
 
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -128,7 +129,24 @@ public class ItemService {
 	}
 
 	public static List<Item> getItemListByCategory(Category category) {
-		return find.where()
-				.eq("categoryId", category.categoryId).order().asc("itemId").findList();
+		return find.where().eq("categoryId", category.categoryId).order()
+				.asc("itemId").findList();
+	}
+
+	/**
+	 *
+	 * 昨日のランキング取得
+	 *
+	 * @param item
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<Item> getCacheItemListByCategory(Category category) {
+		String[] keys = { String.valueOf(category.categoryId) };
+		Class<?>[] param = new Class[] { Category.class };
+		Object[] arguments = { category };
+		return (List<Item>) CacheService.getObject(ItemService.class,
+				CacheService.KeyType.LIST, keys, "getItemListByCategory",
+				param, arguments);
 	}
 }

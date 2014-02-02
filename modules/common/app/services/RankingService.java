@@ -9,6 +9,8 @@ import models.Ranking;
 import play.db.ebean.Model.Finder;
 import utils.ApplicationConfigUtils;
 
+import cache.CacheService;
+
 import com.avaje.ebean.Page;
 import com.avaje.ebean.PagingList;
 import components.DateFormat;
@@ -27,6 +29,27 @@ public class RankingService {
 		return find.where().eq("categoryId", category.categoryId)
 				.eq("date", DateFormat.getLastDateStart()).findRowCount() > 0 ? true
 				: false;
+	}
+
+	/**
+	 *
+	 * 昨日のランキング取得
+	 *
+	 * @param item
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<Ranking> getCacheYesterdayRankingListByCategory(
+			Category category) {
+		Date date = DateFormat.getLastDateStart();
+		String timestamp = DateFormat.getTimestampString(date);
+		String[] keys = { String.valueOf(category.categoryId),
+				String.valueOf(timestamp) };
+		Class<?>[] param = new Class[] { Category.class };
+		Object[] arguments = { category };
+		return (List<Ranking>) CacheService.getObject(RankingService.class,
+				CacheService.KeyType.LIST, keys,
+				"getYesterdayRankingListByCategory", param, arguments);
 	}
 
 	/**
@@ -150,5 +173,22 @@ public class RankingService {
 	public static List<Ranking> getRankingListByCategory(Category category) {
 		return find.where().eq("categoryId", category.categoryId).order()
 				.asc("date").order().asc("itemId").setDistinct(true).findList();
+	}
+
+	/**
+	 *
+	 * 昨日のランキング取得
+	 *
+	 * @param item
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<Ranking> getCacheRankingListByCategory(Category category) {
+		String[] keys = { String.valueOf(category.categoryId) };
+		Class<?>[] param = new Class[] { Category.class };
+		Object[] arguments = { category };
+		return (List<Ranking>) CacheService.getObject(RankingService.class,
+				CacheService.KeyType.LIST, keys, "getRankingListByCategory",
+				param, arguments);
 	}
 }

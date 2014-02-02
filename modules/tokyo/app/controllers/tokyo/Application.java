@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import cache.CacheService;
+
 import models.Category;
 import models.Item;
 import models.Ranking;
@@ -22,15 +24,14 @@ import views.html.tokyo.index;
 import components.DateFormat;
 
 public class Application extends Controller {
-
 	public static Result index() {
 		String title = TokyoApplicationConfigUtils
 				.getSiteFullTitle(TokyoApplicationConfigUtils.SITE_SUB_TITLE);
 
-		Category category = CategoryService.find
-				.byId(TokyoApplicationConfigUtils.CATEGORY_ID);
+		Category category =
+				CategoryService.getCacheCateory(TokyoApplicationConfigUtils.CATEGORY_ID);
 		List<Ranking> list = RankingService
-				.getYesterdayRankingListByCategory(category);
+				.getCacheYesterdayRankingListByCategory(category);
 		ArrayList<RankingBean> arrayList = new ArrayList<RankingBean>();
 		int maxTweetCount = 0;
 		for (Ranking ranking : list) {
@@ -40,10 +41,10 @@ public class Application extends Controller {
 			arrayList.add(bean);
 		}
 
-		List<Item> itemList = ItemService.getItemListByCategory(category);
+		List<Item> itemList = ItemService.getCacheItemListByCategory(category);
 
 		List<Ranking> rankingList = RankingService
-				.getRankingListByCategory(category);
+				.getCacheRankingListByCategory(category);
 		LinkedHashMap<String, LinkedHashMap<Long, Integer>> hashMap = new LinkedHashMap<String, LinkedHashMap<Long, Integer>>();
 
 		for (Ranking ranking : rankingList) {
