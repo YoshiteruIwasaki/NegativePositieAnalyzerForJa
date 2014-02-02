@@ -29,4 +29,13 @@ public class TwitterAnalyze {
 			EvaluationUtils.getTweetList(itemList, category);
 		}
 	}
+
+	public static void analyzeByCategory(Long categoryId) {
+		Category category = CategoryService.getCacheCateory(categoryId);
+		List<Item> itemList = new ArrayList<Item>();
+		if (category != null) {
+			itemList = ItemService.getCacheItemListByCategory(category);
+			EvaluationUtils.getTweetList(itemList, category);
+		}
+	}
 }

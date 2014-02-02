@@ -26,6 +26,18 @@ public class Global extends GlobalSettings {
 				TwitterAnalyze.main();
 			}
 		};
+		Runnable getAnalyzeAkb = new Runnable() {
+			@Override
+			public void run() {
+				TwitterAnalyze.analyzeByCategory(AKB_CATEGORY_ID);
+			}
+		};
+		Runnable getAnalyzeTokyo = new Runnable() {
+			@Override
+			public void run() {
+				TwitterAnalyze.analyzeByCategory(TOKYO_CATEGORY_ID);
+			}
+		};
 
 		Runnable getFeed = new Runnable() {
 			@Override
@@ -48,10 +60,24 @@ public class Global extends GlobalSettings {
 						Duration.create(1, TimeUnit.HOURS), getFeed,
 						Akka.system().dispatcher());
 		// 10分ごとにTwitter検索
+		/*
 		Akka.system()
 				.scheduler()
 				.schedule(Duration.create(1, TimeUnit.SECONDS),
 						Duration.create(600, TimeUnit.SECONDS), getAnalyze,
+						Akka.system().dispatcher());
+						*/
+		// 10分ごとにTwitter検索
+		Akka.system()
+				.scheduler()
+				.schedule(Duration.create(60, TimeUnit.SECONDS),
+						Duration.create(600, TimeUnit.SECONDS), getAnalyzeAkb,
+						Akka.system().dispatcher());
+		// 10分ごとにTwitter検索
+		Akka.system()
+				.scheduler()
+				.schedule(Duration.create(1, TimeUnit.SECONDS),
+						Duration.create(600, TimeUnit.SECONDS), getAnalyzeTokyo,
 						Akka.system().dispatcher());
 		// 1時間ごとに前日のランキング集計
 		Akka.system()
