@@ -21,18 +21,18 @@ public class ItemDetail extends Controller {
 
 	public static Result index(Long categoryId, Long itemId, Integer page) {
 		ArrayList<TweetBean> arrayList = new ArrayList<TweetBean>();
-		Item item = ItemService.find.byId(itemId);
+		Item item = ItemService.getCacheItem(itemId);
 		if (item != null) {
 			ItemBean bean = ItemBeanService.setItemBean(item, categoryId);
-			List<Tweet> list = TweetService.getTweetResultList(item, page);
+			List<Tweet> list = TweetService.getCacheTweetResultList(item, page);
 			for (Tweet tweet : list) {
 				TweetBean tweetBean = TweetBeanService
 						.setTweetBean(item, tweet);
 				arrayList.add(tweetBean);
 			}
-			int count = TweetService.getTweetResultCount(item, page);
-			int countByItem = TweetService.getCountByItem(item);
-			List<DateItemBean> dateList = TweetService.getTweetResultListGroupByDate(item);
+			int count = TweetService.getCacheTweetResultCount(item, page);
+			int countByItem = TweetService.getCacheCountByItem(item);
+			List<DateItemBean> dateList = TweetService.getCacheTweetResultListGroupByDate(item);
 			return ok(detail.render(item.title, bean, arrayList, page, count, countByItem, dateList));
 		}
 

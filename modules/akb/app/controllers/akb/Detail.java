@@ -31,7 +31,7 @@ public class Detail extends Controller {
 		ArrayList<TweetBean> arrayList = new ArrayList<TweetBean>();
 		ArrayList<RankingBean> rankingBeanList = new ArrayList<RankingBean>();
 
-		Item item = ItemService.find.byId(itemId);
+		Item item = ItemService.getCacheItem(itemId);
 		if (item != null) {
 			String  title = AkbApplicationConfigUtils.getSiteFullTitle("[" + item.title + "] " + AkbApplicationConfigUtils.SITE_SUB_TITLE);
 			String  siteTitle = AkbApplicationConfigUtils.getSiteFullTitle(AkbApplicationConfigUtils.SITE_SUB_TITLE);
@@ -39,23 +39,23 @@ public class Detail extends Controller {
 			ItemBean bean = ItemBeanService.setItemBean(item, AkbApplicationConfigUtils.CATEGORY_ID);
 
 			//ツイート一覧
-			List<Tweet> list = TweetService.getTweetGroupResultList(item, page);
+			List<Tweet> list = TweetService.getCacheTweetGroupResultList(item, page);
 			for (Tweet tweet : list) {
 				TweetBean tweetBean = TweetBeanService
 						.setTweetBean(item, tweet);
 				arrayList.add(tweetBean);
 			}
-			int count = TweetService.getTweetGroupResultCount(item, page);
-			int countByItem = TweetService.getCountGroupByItem(item);
-			List<DateItemBean> dateList = TweetService.getTweetResultListGroupByDate(item);
+			int count = TweetService.getCacheTweetGroupResultCount(item, page);
+			int countByItem = TweetService.getCacheCountGroupByItem(item);
+			List<DateItemBean> dateList = TweetService.getCacheTweetResultListGroupByDate(item);
 
 			//ランキング
-			Ranking latestRanking = RankingService.getLatestRanking(item.itemId);
+			Ranking latestRanking = RankingService.getCacheLatestRanking(item.itemId);
 			RankingBean latestRankingBean = new RankingBean();
 			if(latestRanking != null){
 				 latestRankingBean = RankingBeanService.setRankingBean(latestRanking);
 			}
-			List<Ranking> rankingList = RankingService.getRankingListByItem(item);
+			List<Ranking> rankingList = RankingService.getCacheRankingListByItem(item);
 			for (Ranking ranking : rankingList) {
 				RankingBean rankingBean = RankingBeanService.setRankingBean(ranking);
 				rankingBeanList.add(rankingBean);

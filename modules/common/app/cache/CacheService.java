@@ -11,7 +11,7 @@ public class CacheService extends Cache {
 	public static final int CACHE_LIFETIME = 3600;
 
 	public enum KeyType {
-		DETAIL("detail"), LIST("list");
+		DETAIL("detail"), LIST("list"), COUNT("count"), BEAN("bean");
 
 		private final String name;
 
@@ -25,9 +25,10 @@ public class CacheService extends Cache {
 	}
 
 	public static String createKey(Class<?> className, KeyType type,
-			String[] keys) {
+			String methodName, String[] keys) {
 		StringBuilder builder = new StringBuilder(className.getSimpleName())
-				.append("_").append(type.getName());
+				.append("_").append(methodName).append("_")
+				.append(type.getName());
 		for (String key : keys) {
 			builder.append("_").append(key);
 		}
@@ -43,15 +44,16 @@ public class CacheService extends Cache {
 	}
 
 	public static Object getObject(Class<?> className, KeyType type,
-			String[] keys, String methodName, Class<?>[] param,Object[] arguments) {
+			String[] keys, String methodName, Class<?>[] param,
+			Object[] arguments) {
 		Object result = new Object();
 		try {
-			String createKey = createKey(className, type, keys);
+			String createKey = createKey(className, type, methodName, keys);
 			result = getCache(createKey);
 			if (result == null) {
 				Class<?> cls = className;
 				Object instance = cls.newInstance();
-				Method method = cls.getMethod(methodName,param);
+				Method method = cls.getMethod(methodName, param);
 				result = method.invoke(instance, arguments);
 				setCache(createKey, result);
 			}

@@ -9,6 +9,7 @@ import models.Category;
 import models.Item;
 import models.Log;
 import play.db.ebean.Model.Finder;
+import cache.CacheService;
 
 public class LogService {
 
@@ -115,6 +116,21 @@ public class LogService {
 		log.save();
 
 		return log;
+	}
+	/**
+	 * 日付指定のGoogleTrend取得
+	 *
+	 * @param date
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<Log> getCacheLogByDate(String date, Long categoryId) {
+		String[] keys = { String.valueOf(categoryId), date };
+		Class<?>[] param = new Class[] { String.class,Long.class };
+		Object[] arguments = { date, categoryId };
+		return (List<Log>) CacheService.getObject(LogService.class,
+				CacheService.KeyType.LIST, keys, "getLogByDate",
+				param, arguments);
 	}
 
 }

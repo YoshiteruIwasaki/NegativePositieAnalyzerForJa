@@ -27,10 +27,9 @@ public class Application extends Controller {
 		String title = AkbApplicationConfigUtils
 				.getSiteFullTitle(AkbApplicationConfigUtils.SITE_SUB_TITLE);
 
-		Category category = CategoryService.find
-				.byId(AkbApplicationConfigUtils.CATEGORY_ID);
+		Category category = CategoryService.getCacheCateory(AkbApplicationConfigUtils.CATEGORY_ID);
 		List<Ranking> list = RankingService
-				.getYesterdayRankingListByCategory(category);
+				.getCacheYesterdayRankingListByCategory(category);
 		ArrayList<RankingBean> arrayList = new ArrayList<RankingBean>();
 		int maxTweetCount = 0;
 		for (Ranking ranking : list) {
@@ -40,10 +39,10 @@ public class Application extends Controller {
 			arrayList.add(bean);
 		}
 
-		List<Item> itemList = ItemService.getItemListByCategory(category);
+		List<Item> itemList = ItemService.getCacheItemListByCategory(category);
 
 		List<Ranking> rankingList = RankingService
-				.getRankingListByCategory(category);
+				.getCacheRankingListByCategory(category);
 		LinkedHashMap<String, LinkedHashMap<Long, Integer>> hashMap = new LinkedHashMap<String, LinkedHashMap<Long, Integer>>();
 
 		for (Ranking ranking : rankingList) {

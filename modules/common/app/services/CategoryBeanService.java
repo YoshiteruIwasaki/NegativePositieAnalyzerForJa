@@ -9,8 +9,8 @@ import beans.CategoryBean;
 public class CategoryBeanService {
 
 	public static CategoryBean setCategoryBean(Category category) {
-		int totalCount = TweetService.getCountByCategory(category);
-		Tweet latestTweet = TweetService.getLatestTweetByCategory(category);
+		int totalCount = TweetService.getCacheCountByCategory(category);
+		Tweet latestTweet = TweetService.getCacheLatestTweetByCategory(category);
 
 		Date latestTweetDate = (latestTweet != null && latestTweet.createdAt != null) ? latestTweet.createdAt
 				: null;

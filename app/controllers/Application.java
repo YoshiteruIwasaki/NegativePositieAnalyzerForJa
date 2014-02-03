@@ -23,7 +23,7 @@ public class Application extends Controller {
 
 	public static Result index() {
 
-		List<Category> categoryList = CategoryService.getCategoryList();
+		List<Category> categoryList = CategoryService.getCacheCateoryList();
 		ArrayList<CategoryBean> arrayList = new ArrayList<CategoryBean>();
 		for (Category category : categoryList) {
 			CategoryBean bean = CategoryBeanService.setCategoryBean(category);
@@ -35,7 +35,7 @@ public class Application extends Controller {
 
 	public static Result detail(Long categoryId) {
 
-		Category categoryBean = CategoryService.find.byId(categoryId);
+		Category categoryBean = CategoryService.getCacheCateory(categoryId);
 		if (categoryBean == null){
 			return notFound();
 		}
@@ -55,7 +55,7 @@ public class Application extends Controller {
 
 			}
 		} else {
-			List<Item> list = ItemService.getItemListByCategory(categoryBean);
+			List<Item> list = ItemService.getCacheItemListByCategory(categoryBean);
 			if (list != null && list.size() > 0) {
 				for (Item item : list) {
 					ItemBean bean = ItemBeanService.setItemBean(item,

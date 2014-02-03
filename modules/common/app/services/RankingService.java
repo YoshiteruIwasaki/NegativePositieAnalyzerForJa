@@ -38,27 +38,6 @@ public class RankingService {
 	 * @param item
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public static List<Ranking> getCacheYesterdayRankingListByCategory(
-			Category category) {
-		Date date = DateFormat.getLastDateStart();
-		String timestamp = DateFormat.getTimestampString(date);
-		String[] keys = { String.valueOf(category.categoryId),
-				String.valueOf(timestamp) };
-		Class<?>[] param = new Class[] { Category.class };
-		Object[] arguments = { category };
-		return (List<Ranking>) CacheService.getObject(RankingService.class,
-				CacheService.KeyType.LIST, keys,
-				"getYesterdayRankingListByCategory", param, arguments);
-	}
-
-	/**
-	 *
-	 * 昨日のランキング取得
-	 *
-	 * @param item
-	 * @return
-	 */
 	public static List<Ranking> getYesterdayRankingListByCategory(
 			Category category) {
 		return find.where().eq("categoryId", category.categoryId)
@@ -183,6 +162,27 @@ public class RankingService {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	public static List<Ranking> getCacheYesterdayRankingListByCategory(
+			Category category) {
+		Date date = DateFormat.getLastDateStart();
+		String timestamp = DateFormat.getTimestampString(date);
+		String[] keys = { String.valueOf(category.categoryId),
+				String.valueOf(timestamp) };
+		Class<?>[] param = new Class[] { Category.class };
+		Object[] arguments = { category };
+		return (List<Ranking>) CacheService.getObject(RankingService.class,
+				CacheService.KeyType.LIST, keys,
+				"getYesterdayRankingListByCategory", param, arguments);
+	}
+
+	/**
+	 *
+	 * 昨日のランキング取得
+	 *
+	 * @param item
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
 	public static List<Ranking> getCacheRankingListByCategory(Category category) {
 		String[] keys = { String.valueOf(category.categoryId) };
 		Class<?>[] param = new Class[] { Category.class };
@@ -205,8 +205,8 @@ public class RankingService {
 		Class<?>[] param = new Class[] { Item.class };
 		Object[] arguments = { item };
 		return (List<Ranking>) CacheService.getObject(RankingService.class,
-				CacheService.KeyType.LIST, keys, "getRankingListByItem",
-				param, arguments);
+				CacheService.KeyType.LIST, keys, "getRankingListByItem", param,
+				arguments);
 	}
 
 	/**

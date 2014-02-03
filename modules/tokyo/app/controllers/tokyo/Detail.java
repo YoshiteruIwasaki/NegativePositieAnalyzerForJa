@@ -39,15 +39,15 @@ public class Detail extends Controller {
 			ItemBean bean = ItemBeanService.setItemBean(item, TokyoApplicationConfigUtils.CATEGORY_ID);
 
 			//ツイート一覧
-			List<Tweet> list = TweetService.getTweetGroupResultList(item, page);
+			List<Tweet> list = TweetService.getCacheTweetGroupResultList(item, page);
 			for (Tweet tweet : list) {
 				TweetBean tweetBean = TweetBeanService
 						.setTweetBean(item, tweet);
 				arrayList.add(tweetBean);
 			}
-			int count = TweetService.getTweetGroupResultCount(item, page);
-			int countByItem = TweetService.getCountGroupByItem(item);
-			List<DateItemBean> dateList = TweetService.getTweetResultListGroupByDate(item);
+			int count = TweetService.getCacheTweetGroupResultCount(item, page);
+			int countByItem = TweetService.getCacheCountGroupByItem(item);
+			List<DateItemBean> dateList = TweetService.getCacheTweetResultListGroupByDate(item);
 
 			//ランキング
 			Ranking latestRanking = RankingService.getCacheLatestRanking(item.itemId);

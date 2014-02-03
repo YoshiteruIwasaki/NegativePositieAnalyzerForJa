@@ -10,11 +10,11 @@ import beans.ItemBean;
 public class ItemBeanService {
 
 	public static ItemBean setItemBeanCore(Item item, Long categoryId) {
-		int countNeutral = TweetService.countNeutralTweetByItem(item);
-		int countNegative = TweetService.countNegativeTweetByItem(item);
-		int countPositive = TweetService.countPositiveTweetByItem(item);
+		int countNeutral = TweetService.countCacheNeutralTweetByItem(item);
+		int countNegative = TweetService.countCacheNegativeTweetByItem(item);
+		int countPositive = TweetService.countCachePositiveTweetByItem(item);
 		int totalCount = countNeutral + countNegative + countPositive;
-		Tweet latestTweet = TweetService.getLatestTweetByItem(item);
+		Tweet latestTweet = TweetService.getCacheLatestTweetByItem(item);
 		Date latestTweetDate = (latestTweet != null && latestTweet.createdAt != null) ? latestTweet.createdAt
 				: null;
 		ItemBean bean = new ItemBean();

@@ -13,6 +13,7 @@ import rikyu.model.Sentence;
 import twitter4j.Status;
 import utils.ApplicationConfigUtils;
 import beans.DateItemBean;
+import cache.CacheService;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Page;
@@ -355,5 +356,127 @@ public class TweetService {
 		int count = getCountGroupByItem(item);
 		return count > 0 ? (int) Math.ceil(count
 				/ ApplicationConfigUtils.MAX_PER_PAGE) + 2 : 0;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<DateItemBean> getCacheTweetResultListGroupByDate(
+			Item item) {
+		String[] keys = { String.valueOf(item.itemId) };
+		Class<?>[] param = new Class[] { Item.class };
+		Object[] arguments = { item };
+		return (List<DateItemBean>) CacheService.getObject(TweetService.class,
+				CacheService.KeyType.LIST, keys,
+				"getTweetResultListGroupByDate", param, arguments);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<Tweet> getCacheTweetGroupResultList(Item item,
+			Integer page) {
+		String[] keys = { String.valueOf(item.itemId), String.valueOf(page) };
+		Class<?>[] param = new Class[] { Item.class, Integer.class };
+		Object[] arguments = { item, page };
+		return (List<Tweet>) CacheService.getObject(TweetService.class,
+				CacheService.KeyType.LIST, keys, "getTweetGroupResultList",
+				param, arguments);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<Tweet> getCacheTweetResultList(Item item, Integer page) {
+		String[] keys = { String.valueOf(item.itemId), String.valueOf(page) };
+		Class<?>[] param = new Class[] { Item.class, Integer.class };
+		Object[] arguments = { item, page };
+		return (List<Tweet>) CacheService.getObject(TweetService.class,
+				CacheService.KeyType.LIST, keys, "getTweetResultList", param,
+				arguments);
+	}
+
+	public static Integer getCacheTweetGroupResultCount(Item item, Integer page) {
+		String[] keys = { String.valueOf(item.itemId) };
+		Class<?>[] param = new Class[] { Item.class, Integer.class };
+		Object[] arguments = { item, page };
+		return (Integer) CacheService.getObject(TweetService.class,
+				CacheService.KeyType.COUNT, keys, "getTweetGroupResultCount",
+				param, arguments);
+	}
+
+	public static Integer getCacheTweetResultCount(Item item, Integer page) {
+		String[] keys = { String.valueOf(item.itemId) };
+		Class<?>[] param = new Class[] { Item.class, Integer.class };
+		Object[] arguments = { item, page };
+		return (Integer) CacheService.getObject(TweetService.class,
+				CacheService.KeyType.COUNT, keys, "getTweetResultCount", param,
+				arguments);
+	}
+
+	public static Integer getCacheCountGroupByItem(Item item) {
+		String[] keys = { String.valueOf(item.itemId) };
+		Class<?>[] param = new Class[] { Item.class };
+		Object[] arguments = { item };
+		return (Integer) CacheService.getObject(TweetService.class,
+				CacheService.KeyType.COUNT, keys, "getCountGroupByItem", param,
+				arguments);
+	}
+
+	public static int getCacheCountByItem(Item item) {
+		String[] keys = { String.valueOf(item.itemId) };
+		Class<?>[] param = new Class[] { Item.class };
+		Object[] arguments = { item };
+		return (Integer) CacheService.getObject(TweetService.class,
+				CacheService.KeyType.COUNT, keys, "getCountByItem", param,
+				arguments);
+	}
+
+	public static int getCacheCountByCategory(Category category) {
+		String[] keys = { String.valueOf(category.categoryId) };
+		Class<?>[] param = new Class[] { Category.class };
+		Object[] arguments = { category };
+		return (Integer) CacheService.getObject(TweetService.class,
+				CacheService.KeyType.COUNT, keys, "getCountByCategory", param,
+				arguments);
+	}
+
+	public static Tweet getCacheLatestTweetByCategory(Category category) {
+		String[] keys = { String.valueOf(category.categoryId) };
+		Class<?>[] param = new Class[] { Category.class };
+		Object[] arguments = { category };
+		return (Tweet) CacheService.getObject(TweetService.class,
+				CacheService.KeyType.DETAIL, keys, "getLatestTweetByCategory",
+				param, arguments);
+	}
+
+	public static Tweet getCacheLatestTweetByItem(Item item) {
+		String[] keys = { String.valueOf(item.itemId) };
+		Class<?>[] param = new Class[] { Item.class };
+		Object[] arguments = { item };
+		return (Tweet) CacheService.getObject(TweetService.class,
+				CacheService.KeyType.DETAIL, keys, "getLatestTweetByItem",
+				param, arguments);
+	}
+
+	public static int countCacheNeutralTweetByItem(Item item) {
+		String[] keys = { String.valueOf(item.itemId) };
+		Class<?>[] param = new Class[] { Item.class };
+		Object[] arguments = { item };
+		return (Integer) CacheService.getObject(TweetService.class,
+				CacheService.KeyType.COUNT, keys, "countNeutralTweetByItem",
+				param, arguments);
+	}
+
+	public static int countCacheNegativeTweetByItem(Item item) {
+		String[] keys = { String.valueOf(item.itemId) };
+		Class<?>[] param = new Class[] { Item.class };
+		Object[] arguments = { item };
+		return (Integer) CacheService.getObject(TweetService.class,
+				CacheService.KeyType.COUNT, keys, "countNegativeTweetByItem",
+				param, arguments);
+	}
+
+	public static int countCachePositiveTweetByItem(Item item) {
+		String[] keys = { String.valueOf(item.itemId) };
+		Class<?>[] param = new Class[] { Item.class };
+		Object[] arguments = { item };
+		return (Integer) CacheService.getObject(TweetService.class,
+				CacheService.KeyType.COUNT, keys, "countPositiveTweetByItem",
+				param, arguments);
 	}
 }

@@ -43,6 +43,24 @@ public class CategoryService {
 	 *
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
+	public static List<Category> getCacheCateoryList() {
+		String[] keys = { "all" };
+		String createKey = CacheService.createKey(CategoryService.class,
+				CacheService.KeyType.LIST, "getCategoryList", keys);
+		Object result = CacheService.getCache(createKey);
+		if (result == null) {
+			result = getCategoryList();
+			CacheService.setCache(createKey, result);
+		}
+		return (List<Category>) result;
+	}
+
+	/**
+	 * Category取得
+	 *
+	 * @return
+	 */
 	public static Category getCacheCateory(Long categoryId) {
 		String[] keys = { String.valueOf(categoryId) };
 		Class<?>[] param = new Class[] { Long.class };
