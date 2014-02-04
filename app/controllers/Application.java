@@ -16,6 +16,7 @@ import services.LogService;
 import beans.CategoryBean;
 import beans.ItemBean;
 
+import utils.ApplicationConfigUtils;
 import views.html.index;
 import views.html.category;
 
@@ -35,8 +36,12 @@ public class Application extends Controller {
 
 	public static Result detail(Long categoryId) {
 
+		if (ApplicationConfigUtils.MAINTENANCE_MODE) {
+			return ok("メンテナンス中です");
+		}
+
 		Category categoryBean = CategoryService.getCacheCateory(categoryId);
-		if (categoryBean == null){
+		if (categoryBean == null) {
 			return notFound();
 		}
 
@@ -55,7 +60,8 @@ public class Application extends Controller {
 
 			}
 		} else {
-			List<Item> list = ItemService.getCacheItemListByCategory(categoryBean);
+			List<Item> list = ItemService
+					.getCacheItemListByCategory(categoryBean);
 			if (list != null && list.size() > 0) {
 				for (Item item : list) {
 					ItemBean bean = ItemBeanService.setItemBean(item,

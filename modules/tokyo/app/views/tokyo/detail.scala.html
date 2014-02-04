@@ -135,7 +135,8 @@
     </script>
 
 <h3>ツイート一覧</h3>
-
+<p>@{countByItem}件のうち最新の10件のツイートを表示しています。</p>
+@*********************
 <div class="clearfix">
 <div class="pull-right"><ul class="pager">
 	@if(currentPage == 1) {
@@ -154,6 +155,7 @@
 @{currentPage}/@{pageCount -1}ページ :@{countByItem}件
 </div>
 </div>
+ *************************************@
 
 <div class="row" id="itemDetail">
 	@if(tweetList != null && tweetList.size() > 0){
@@ -175,7 +177,7 @@
 	}
 	    </div>
 
-
+@*********************
 
 <div class="clearfix">
 <div class="pull-right"><ul class="pager">
@@ -195,5 +197,7 @@
 @{currentPage}/@{pageCount -1}ページ :@{countByItem}件
 </div>
 </div>
+
+ *************************************@
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 }

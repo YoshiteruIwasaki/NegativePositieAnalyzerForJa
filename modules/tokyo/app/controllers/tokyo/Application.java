@@ -5,14 +5,21 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.lang.annotation.Target;
+import java.lang.annotation.Retention;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.RetentionPolicy;
 
 import cache.CacheService;
 
 import models.Category;
 import models.Item;
 import models.Ranking;
+import play.cache.CachedAction;
+import play.cache.Cached;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.With;
 import services.CategoryService;
 import services.ItemService;
 import services.RankingBeanService;

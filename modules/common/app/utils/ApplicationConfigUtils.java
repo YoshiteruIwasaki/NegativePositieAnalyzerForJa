@@ -18,4 +18,5 @@ public class ApplicationConfigUtils {
 		return string + SITE_TITLE;
 
 	}
+	public static final boolean MAINTENANCE_MODE = true;
 }

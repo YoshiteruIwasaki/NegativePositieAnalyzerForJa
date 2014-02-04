@@ -15,11 +15,16 @@ import beans.DateItemBean;
 import beans.ItemBean;
 import beans.TweetBean;
 
+import utils.ApplicationConfigUtils;
 import views.html.detail;
 
 public class ItemDetail extends Controller {
 
 	public static Result index(Long categoryId, Long itemId, Integer page) {
+
+		if (ApplicationConfigUtils.MAINTENANCE_MODE) {
+			return ok("メンテナンス中です");
+		}
 		ArrayList<TweetBean> arrayList = new ArrayList<TweetBean>();
 		Item item = ItemService.getCacheItem(itemId);
 		if (item != null) {

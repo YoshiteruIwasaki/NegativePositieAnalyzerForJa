@@ -28,6 +28,10 @@ public class Detail extends Controller {
 
 	public static Result index(Long itemId, Integer page) {
 
+		if (ApplicationConfigUtils.MAINTENANCE_MODE) {
+			return ok("メンテナンス中です");
+		}
+
 		ArrayList<TweetBean> arrayList = new ArrayList<TweetBean>();
 		ArrayList<RankingBean> rankingBeanList = new ArrayList<RankingBean>();
 
