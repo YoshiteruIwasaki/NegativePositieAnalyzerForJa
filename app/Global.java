@@ -77,7 +77,7 @@ public class Global extends GlobalSettings {
 		Akka.system()
 				.scheduler()
 				.schedule(Duration.create(60, TimeUnit.SECONDS),
-						Duration.create(1, TimeUnit.HOURS), setRanking,
+						Duration.create(10, TimeUnit.MINUTES), setRanking,
 						Akka.system().dispatcher());
 
 	}
