@@ -97,7 +97,7 @@
         var data = google.visualization.arrayToDataTable([
           ['Date', @for(item <- itemList){'@{item.title}', }],
           @for((key, map) <- rankingMap){
-          ['@key,', @for((itemid, rank) <- map){@{rank}, }],
+          ['@key', @for((itemid, rank) <- map){@{rank}, }],
           }
         ]);
 
